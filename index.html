@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.4">
+  <title> MDI Check-In</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Bebas Neue', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background-color: #FFBDCD;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 35px;
+      box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      margin: 30px 0;
+    }
+
+    #question {
+      font-size: 2rem;
+    }
+
+    .larger-text {
+      font-size: 40rem; 
+    }
+
+    #title {
+    font-size: 3rem; /* Adjust this value to make the text larger */
+    margin-bottom: 10px; /* Optional: Adds space below the title */
+    }
+
+
+    img {
+      display: block;
+      margin: 20px auto;
+      max-width: 60%;
+      height: auto;
+    }
+
+    button {
+      font-family: 'Bebas Neue', sans-serif; /* Ensures buttons use the same font */
+      display: inline-block;
+      padding: 15px 30px;
+      font-size: 1.6rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      background-color: #ff2e54;
+      color: white;
+      margin: 5px;
+    }
+
+    button:hover {
+      background-color: #d12844;
+    }
+
+    input[type="text"] {
+      font-family: 'Bebas Neue', sans-serif; /* Ensures buttons use the same font */
+      font-size: 1.5rem;
+      padding: 10px;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      width: 70%;
+    }
+
+    #buttons {
+      margin-top: 0px;
+     
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img id="logo" src="images/logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/400x200'; this.alt='Placeholder Logo';">
+    
+    <h1 id="title" style="display: block;">Welcome to MDI!</h1>
+    <p id="question" class="larger-text">Check in</p>
+
+
+    <div id="buttons">
+      <button onclick="nextStep('language')">Check-In</button>
+    </div>
+
+    <div id="input-section" style="display: none;">
+      <input type="text" id="name" placeholder="Enter your name">
+      <button onclick="submitName()">Done</button>
+    </div>
+
+    <img id="image" src="" alt="" style="display: none;">
+  </div>
+
+  <script>
+    let currentStep = 'start';
+    let userName = '';
+
+    const steps = {
+      start: {
+        question: "Tap to check in",
+        buttons: [
+          { text: "Check-In", nextStep: "language" }
+        ],
+      },
+      language: {
+        question: "Select a language",
+        buttons: [
+          { text: "Deutsch", nextStep: "intro" },
+          { text: "English", nextStep: "intro" }
+        ],
+      },
+      intro: {
+        question: "Hi! I'm Prisma, your digital host, and I will be here to help you.",
+        buttons: [
+          { text: "Next", nextStep: "startCheckIn" }
+        ],
+      },
+      startCheckIn: {
+        question: "Let's start with the check-in!",
+        buttons: [
+          { text: "Next", nextStep: "enterName" }
+        ],
+      },
+      enterName: {
+        question: "Please enter your name",
+        input: true,
+      },
+      askVisited: {
+        question: () => `Thank you, ${userName}! Have you been here before?`,
+        buttons: [
+          { text: "Yes", nextStep: "visitedYes" },
+          { text: "No", nextStep: "visitedNo" }
+        ],
+      },
+      visitedNo: {
+        question: () => `Welcome, ${userName}! It's great to see you!`,
+        buttons: [
+          { text: "Give me a Tour of the MDI", nextStep: "tour" },
+          { text: "I just want to check in", nextStep: "completeCheckIn" }
+        ],
+      },
+      visitedYes: {
+        question: () => `Welcome back, ${userName}! It's great to have you here!`,
+        buttons: [
+          { text: "Give me a Tour of the MDI", nextStep: "tour" },
+          { text: "I just want to check in", nextStep: "completeCheckIn" }
+        ],
+      },
+      tour: {
+        question: "Choose a tour option:",
+        buttons: [
+          { text: "Space", nextStep: "space" },
+          { text: "Agenda", nextStep: "agenda" },
+          { text: "Info", nextStep: "info" }
+        ],
+      },
+      space: {
+        question: "Explore the Space",
+        image: "images/space.png",
+        buttons: [
+          { text: "Back to the Tour", nextStep: "tour" },
+          { text: "Complete the Check-In", nextStep: "completeCheckIn" }
+        ],
+      },
+      agenda: {
+        question: "Check out the Agenda",
+        image: "images/time.jpg",
+        buttons: [
+          { text: "Back to the Tour", nextStep: "tour" },
+          { text: "Complete the Check-In", nextStep: "completeCheckIn" }
+        ],
+      },
+      info: {
+        question: "Get More Info",
+        image: "images/info.jpg",
+        buttons: [
+          { text: "Back to the Tour", nextStep: "tour" },
+          { text: "Complete the Check-In", nextStep: "completeCheckIn" }
+        ],
+      },
+      completeCheckIn: {
+        question: () => `Perfect, ${userName}! You are now all set. For the final step, pick your Name-tag and enjoy!`,
+        buttons: [
+          { text: "Done", nextStep: "start" }
+        ],
+      }
+    };
+
+    function nextStep(step) {
+      if (step === "start") {
+        location.reload(); // Refresh the page
+        return; // Prevent further execution
+      }
+      currentStep = step;
+      renderStep();
+    }
+
+    function submitName() {
+      const nameInput = document.getElementById('name').value.trim();
+      if (nameInput) {
+        userName = nameInput;
+        nextStep('askVisited');
+      }
+    }
+
+    function renderStep() {
+      const step = steps[currentStep];
+      const question = typeof step.question === 'function' ? step.question() : step.question;
+
+      // Update question
+      document.getElementById('question').innerText = question;
+
+      // Hide the welcome title after the first step
+      if (currentStep !== 'start') {
+        document.getElementById('title').style.display = 'none';
+      }
+
+      // Update buttons
+      const buttonsDiv = document.getElementById('buttons');
+      buttonsDiv.innerHTML = '';
+
+      if (step.buttons) {
+        step.buttons.forEach(button => {
+          const btn = document.createElement('button');
+          btn.innerText = button.text;
+          btn.onclick = () => nextStep(button.nextStep);
+          buttonsDiv.appendChild(btn);
+        });
+        buttonsDiv.style.display = 'block';
+      } else {
+        buttonsDiv.style.display = 'none';
+      }
+
+      // Show/hide input field
+      const inputSection = document.getElementById('input-section');
+      inputSection.style.display = step.input ? 'block' : 'none';
+
+      // Update image/logo
+      const imageElement = document.getElementById('image');
+      const logoElement = document.getElementById('logo');
+      if (step.image) {
+        imageElement.src = step.image;
+        imageElement.style.display = 'block';
+        logoElement.style.display = 'none'; // Hide the logo when an image is displayed
+      } else {
+        imageElement.style.display = 'none';
+        logoElement.style.display = 'block'; // Always show the logo unless replaced
+      }
+    }
+
+    renderStep();
+  </script>
+</body>
+</html>
