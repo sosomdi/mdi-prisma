@@ -88,7 +88,7 @@
 </head>
 <body>
   <div class="container">
-    <img id="logo" src="images/logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/400x200'; this.alt='Placeholder Logo';">
+    <img id="logo" src="logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/400x200'; this.alt='Placeholder Logo';">
     
     <h1 id="title" style="display: block;">Welcome to MDI!</h1>
     <p id="question" class="larger-text">Check in</p>
@@ -171,7 +171,7 @@
       },
       space: {
         question: "Explore the Space",
-        image: "images/space.png",
+        image: "space.png",
         buttons: [
           { text: "Back to the Tour", nextStep: "tour" },
           { text: "Complete the Check-In", nextStep: "completeCheckIn" }
@@ -179,7 +179,7 @@
       },
       agenda: {
         question: "Check out the Agenda",
-        image: "images/time.jpg",
+        image: "time.jpg",
         buttons: [
           { text: "Back to the Tour", nextStep: "tour" },
           { text: "Complete the Check-In", nextStep: "completeCheckIn" }
@@ -187,7 +187,7 @@
       },
       info: {
         question: "Get More Info",
-        image: "images/info.jpg",
+        image: "info.jpg",
         buttons: [
           { text: "Back to the Tour", nextStep: "tour" },
           { text: "Complete the Check-In", nextStep: "completeCheckIn" }
@@ -250,7 +250,7 @@
       const inputSection = document.getElementById('input-section');
       inputSection.style.display = step.input ? 'block' : 'none';
 
-      // Update image/logo
+      // Update logo
       const imageElement = document.getElementById('image');
       const logoElement = document.getElementById('logo');
       if (step.image) {
